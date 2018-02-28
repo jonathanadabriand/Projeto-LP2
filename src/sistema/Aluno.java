@@ -1,8 +1,8 @@
 package sistema;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class Aluno {
+
+
+public class Aluno implements Comparable<Aluno>{
 	private int  nota, codigoCurso;
 	private String matricula, nome, email, telefone;
 	
@@ -52,11 +52,18 @@ public class Aluno {
 		return matricula + " - "  + nome + " - "  + codigoCurso  + " - " + telefone + " - " + email;
 
 	}
-	
-	
-	private void verificaAluno(String nome, String email) {
-		
+
+	@Override
+	public int compareTo(Aluno outroAluno) {
+		return 	this.getNome().compareTo(outroAluno.getNome());
+			
 	}
+
+
+
+	
+	
+	
 	
 }
 	

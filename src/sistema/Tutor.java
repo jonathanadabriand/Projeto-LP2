@@ -1,15 +1,16 @@
 package sistema;
 
 
-import java.util.HashMap;
+import java.util.ArrayList;
+
 
 public class Tutor extends Aluno{
-	private HashMap<String, Integer> disciplinas = new HashMap<>();
+	private ArrayList<Disciplina> disciplinas = new ArrayList<>();
 	private int nota, dinheiro;
 	
 	public Tutor(String nome, String matricula, int codigoCurso, String telefone, String email, String disciplina, int proficiencia) {
 		super(nome, matricula, codigoCurso, telefone, email);
-		disciplinas.put(disciplina, proficiencia);
+		addDisciplina(disciplina, proficiencia);
 		this.nota = 4;
 		this.dinheiro = 0;
 	}
@@ -31,11 +32,17 @@ public class Tutor extends Aluno{
 	}
 
 	public boolean verificaDisciplina(String disciplina) {
-		return disciplinas.containsKey(disciplina);
+		for(Disciplina d: disciplinas) {
+			if(d.getNomeDisciplina().equals(disciplina)) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public void addDisciplina(String disciplina, int proficiencia) {
-		disciplinas.put(disciplina, proficiencia);
+		Disciplina d = new Disciplina(disciplina, proficiencia);
+		disciplinas.add(d);
 	}
 	
 	
