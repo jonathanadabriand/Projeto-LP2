@@ -15,7 +15,6 @@ public class ControleQMA {
 	public ControleQMA() {
 		this.alunos = new ArrayList<>();
 		this.tutores = new ArrayList<>();
-		
 	}
 	
 	public void cadastrarAluno(String nome, String matricula, int codigoCurso, String telefone, String email) {
@@ -144,6 +143,9 @@ public class ControleQMA {
 		else if(proficiencia < 1 || proficiencia > 5) {
 			throw new IllegalArgumentException("Erro na definicao de papel: Proficiencia invalida");
 		}
+		else if(retornaTutor(matricula)!= null && retornaTutor(matricula).verificaDisciplina(disciplina)) {
+            throw new IllegalArgumentException("Erro na definicao de papel: Ja eh tutor dessa disciplina");
+        }
 	}
 	
 	private void verificaRecuperaTutor(String matricula) {
@@ -152,4 +154,72 @@ public class ControleQMA {
 		}
 		
 	}
+	
+	//us3
+	public void cadastrarHorario(String email, String horario, String dia) {
+		email = email.trim();
+		horario = horario.trim();
+		dia = dia.trim();
+		if(email.isEmpty() || email.equals(null)) {
+			throw new IllegalArgumentException("Erro no cadastrar horario: email nao pode ser vazio ou em branco");
+		}
+		if(horario.isEmpty() || horario.equals(null)) {
+			throw new IllegalArgumentException("Erro no cadastrar horario: horario nao pode ser vazio ou em branco");
+		}
+		if(dia.isEmpty() || dia.equals(null)) {
+			throw new IllegalArgumentException("Erro no cadastrar horario: dia nao pode ser vazio ou em branco");
+		}
+		boolean existeTutor = false;
+		for(Tutor tutor : this.tutores) {
+			if(tutor.getEmail().equals(email)) {
+				tutor.addHorario(horario, dia);
+				existeTutor = true;
+				break;
+			}
+		}
+		if(!existeTutor) {
+			throw new IllegalArgumentException("Erro no cadastrar horario: tutor nao cadastrado");
+		}
+	}
+		
+	public void cadastrarLocalDeAtendimento(String email, String local) {
+		email = email.trim();
+		local = local.trim();
+		if(email.isEmpty() || email.equals(null)) {
+			throw new IllegalArgumentException("Erro no cadastrar local de atendimento: email nao pode ser vazio ou em branco");
+		}
+		if(local.isEmpty() || local.equals(null)) {
+			throw new IllegalArgumentException("Erro no cadastrar local de atendimento: local nao pode ser vazio ou em branco");
+		}
+		boolean existeTutor = false;
+		for(Tutor tutor : this.tutores) {
+			if(tutor.getEmail().equals(email)) {
+				tutor.addLocalDeAtendimento(local);
+				existeTutor = true;
+				break;
+			}
+		}
+		if(!existeTutor) {
+			throw new IllegalArgumentException("Erro no cadastrar local de atendimento: tutor nao cadastrado");
+		}
+	}
+		
+	public boolean consultaHorario(String email, String horario, String dia) {
+		for(Tutor tutor : this.tutores) {
+			if(tutor.getEmail().equals(email)) {
+				return tutor.consultaHorario(horario, dia);
+			}
+		}
+		return false;
+	}
+		
+	public boolean consultaLocal(String email, String local) {
+		for(Tutor tutor : this.tutores) {
+			if(tutor.getEmail().equals(email)) {
+				return tutor.consultaLocalDeAtendimento(local);
+			}
+		}
+		return false;
+	}
+	
 }

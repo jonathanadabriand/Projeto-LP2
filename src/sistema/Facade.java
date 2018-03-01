@@ -34,6 +34,22 @@ public class Facade {
 		return c.listarTutores();
 	}
 
+	public void cadastrarHorario(String email, String horario, String dia) {
+		c.cadastrarHorario(email, horario, dia);
+	}
+	
+	public void cadastrarLocalDeAtendimento(String email, String local) {
+		c.cadastrarLocalDeAtendimento(email, local);
+	}
+	
+	public boolean consultaHorario(String email, String horario, String dia) {
+		return c.consultaHorario(email, horario, dia);
+	}
+	
+	public boolean consultaLocal(String email, String local) {
+		return c.consultaLocal(email, local);
+	}
+
 	
 }
 
