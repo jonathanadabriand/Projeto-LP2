@@ -3,7 +3,8 @@ import easyaccept.EasyAccept;
 
 public class Facade {
 	public static void main(String[] args) {
-		args = new String[] { "sistema.Facade", "Testes_aceitacao/us1_test.txt", "Testes_aceitacao/us2_test.txt", "Testes_aceitacao/us3_test.txt"};
+		args = new String[] { "sistema.Facade", "Testes_aceitacao/us1_test.txt", "Testes_aceitacao/us2_test.txt", "Testes_aceitacao/us3_test.txt", 
+				"Testes_aceitacao/us4_test.txt", "Testes_aceitacao/us5_test.txt", "Testes_aceitacao/us6_test.txt"};
 		EasyAccept.main(args);
 	}
 	

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 
 public class Tutor extends Aluno{
 	private ArrayList<Disciplina> disciplinas;
-	private int nota, dinheiro;
+	private int notaTutor, dinheiro;
 	private ArrayList<Horario> horarios;
 	private ArrayList<LocalDeAtendimento> locais;
 	
@@ -14,18 +14,18 @@ public class Tutor extends Aluno{
 		super(nome, matricula, codigoCurso, telefone, email);
 		this.disciplinas = new ArrayList<>();
 		addDisciplina(disciplina, proficiencia);
-		this.nota = 4;
+		this.notaTutor = 4;
 		this.dinheiro = 0;
 		this.horarios = new ArrayList<>();
 		this.locais = new ArrayList<>();
 	}
 
-	public int getNota() {
-		return nota;
+	public int getNotaTutor() {
+		return notaTutor;
 	}
 
-	public void setNota(int nota) {
-		this.nota = nota;
+	public void setNotaTutor(int nota) {
+		this.notaTutor = nota;
 	}
 
 	public int getDinheiro() {
