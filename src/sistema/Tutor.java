@@ -33,7 +33,7 @@ public class Tutor extends Aluno{
 	}
 
 	public void setDinheiro(int dinheiro) {
-		this.dinheiro = dinheiro;
+		this.dinheiro += dinheiro;
 	}
 
 	public boolean verificaDisciplina(String disciplina) {
@@ -75,5 +75,8 @@ public class Tutor extends Aluno{
 		}
 		return false;
 	}	
+	
+	
+	
 
 }

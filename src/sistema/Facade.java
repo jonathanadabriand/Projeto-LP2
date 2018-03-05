@@ -50,6 +50,21 @@ public class Facade {
 	public boolean consultaLocal(String email, String local) {
 		return c.consultaLocal(email, local);
 	}
+	
+	
+	
+	
+	//us6
+	
+   public void doar(String matriculaTutor, int totalCentavos) {
+	   c.doar( matriculaTutor, totalCentavos);
+   }
+    public int totalDinheiroTutor(String emailTutor) {
+    	return c.totalDinheiroTutor(emailTutor);
+    }
+    public int totalDinheiroSistema() {
+    	return c.totalDinheiroSistema();
+    }
 
 	
 }

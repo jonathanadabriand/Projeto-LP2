@@ -4,17 +4,15 @@ import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-
-
-
-
 public class ControleQMA {
-	ArrayList<Aluno> alunos;
-	ArrayList<Tutor> tutores;
+	private ArrayList<Aluno> alunos;
+	private ArrayList<Tutor> tutores;
+	private int caixaSistema;
 
 	public ControleQMA() {
 		this.alunos = new ArrayList<>();
 		this.tutores = new ArrayList<>();
+		this.caixaSistema = 0;
 	}
 	
 	public void cadastrarAluno(String nome, String matricula, int codigoCurso, String telefone, String email) {
@@ -85,7 +83,7 @@ public class ControleQMA {
 	}
 	
 	
-	public Aluno retornaAluno(String matricula) {
+	private Aluno retornaAluno(String matricula) {
 		Aluno a1 = null;
 		for(Aluno a2: alunos) {
 			if(a2.getMatricula().equals(matricula)){
@@ -95,7 +93,7 @@ public class ControleQMA {
 		return a1;	
 	}
 	
-	public Tutor retornaTutor(String matricula) {
+	private Tutor retornaTutor(String matricula) {
 		Tutor t1 = null;
 		for(Tutor t2: tutores) {
 			if(t2.getMatricula().equals(matricula)){
@@ -221,5 +219,59 @@ public class ControleQMA {
 		}
 		return false;
 	}
+	
+	//us6
+
+	public void doar(String matriculaTutor, int totalCentavos) {
+		Tutor t = retornaTutor(matriculaTutor);
+		if (totalCentavos < 0) {
+			throw new IllegalArgumentException("Erro na doacao para tutor: totalCentavos nao pode ser menor que zero");
+		}
+		else if (t.equals(null)) {
+			throw new NullPointerException("Erro na doacao para tutor: Tutor nao encontrado");
+		}
+		int totalTutor, totalSistema;
+		double taxaTutor;
+		if(t.getNotaTutor() > 4.5) {
+			taxaTutor = ((t.getNotaTutor() - 4.5) * 0.1) + 0.9;
+			totalSistema = (int) ((1 - taxaTutor) * totalCentavos);
+			
+		}
+		else if(t.getNotaTutor() <= 4.5 || t.getNotaTutor() > 3) {
+			totalSistema = (int) (0.2 * totalCentavos);
+		}
+		else {
+			taxaTutor = ((0.4 - t.getNotaTutor()) * 0.1) + 0.9;
+			totalSistema = (int) ((1 - taxaTutor) * totalCentavos);
+		}
+		totalTutor = totalCentavos - totalSistema;
+		this.caixaSistema += totalSistema;
+		t.setDinheiro(totalTutor);
+	}
+
+	public int totalDinheiroTutor(String emailTutor) {
+		if (emailTutor.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro na consulta de total de dinheiro do tutor: emailTutor nao pode ser vazio ou nulo");
+		}
+		int dinheiroTutor = 0;
+		boolean verificatutor = false;
+		for(Tutor tutor : this.tutores) {
+			if(tutor.getEmail().equals(emailTutor)) {
+				dinheiroTutor = tutor.getDinheiro();
+				verificatutor = true;
+			}
+		}
+		if(!verificatutor) {
+			throw new IllegalArgumentException("Erro na consulta de total de dinheiro do tutor: Tutor nao encontrado");
+		}
+		return dinheiroTutor;
+	}
+	
+
+	public int totalDinheiroSistema() {
+		return this.caixaSistema;
+	}
+	
+	
 	
 }
