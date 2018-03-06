@@ -51,7 +51,21 @@ public class Facade {
 		return c.consultaLocal(email, local);
 	}
 	
+	public int pedirAjudaPresencial (String matAluno, String disciplina, String horario, String dia, String localInteresse){
+		return c.pedirAjudaPresencial(matAluno, disciplina, horario, dia, localInteresse);
+	}
 	
+	public int pedirAjudaOnline (String matAluno, String disciplina) {
+		return c.pedirAjudaOnline(matAluno, disciplina);
+	}
+	
+	public String getInfoAjuda(int idAjuda, String atributo) {
+		return c.getInfoAjuda(idAjuda, atributo);
+	}
+	
+	public String pegarTutor(int idAjuda) {
+		return c.pegarTutor(idAjuda);
+	}
 	
 	
 	//us6

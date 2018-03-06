@@ -1,20 +1,24 @@
 package sistema;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ControleQMA {
 	private ArrayList<Aluno> alunos;
 	private ArrayList<Tutor> tutores;
+	private HashMap<Integer,Ajuda> ajudas;
 	private int caixaSistema;
 
 	public ControleQMA() {
 		this.alunos = new ArrayList<>();
 		this.tutores = new ArrayList<>();
 		this.caixaSistema = 0;
+		ajudas = new HashMap<>();
 	}
 	
+	//us1
 	public void cadastrarAluno(String nome, String matricula, int codigoCurso, String telefone, String email) {
 		verificaCadastro(matricula, nome, email);
 		Aluno a1 = new Aluno(nome, matricula, codigoCurso, telefone, email);
@@ -51,27 +55,27 @@ public class ControleQMA {
 		}
 		return "Atributo nao encontrado";
 	}
-
+	
+	//us2
 	public void tornarTutor(String matricula, String disciplina, int proficiencia) {
 			verificaTornaTutor(matricula, disciplina, proficiencia);
-			Aluno a = retornaAluno(matricula);;
+			Aluno a = retornaAluno(matricula);
 			if (retornaTutor(matricula) == null) {
 				Tutor t = new Tutor(a.getNome(), a.getMatricula(), a.getCodigoCurso(), a.getTelefone(), a.getEmail(), disciplina, proficiencia);
 				tutores.add(t);
+				alunos.remove(a);
+				alunos.add(t);
 			}	
 			else {
 				retornaTutor(matricula).addDisciplina(disciplina, proficiencia);
 			}
 	}
 	
-
 	public String recuperaTutor(String matricula) {
 		verificaRecuperaTutor(matricula);
 		return retornaTutor(matricula).toString();
 		
 	}
-
-	
 
 	public String listarTutores() {
 		String listagem = "";
@@ -80,77 +84,6 @@ public class ControleQMA {
 		}
 		listagem = listagem.substring(0, listagem.length() - 2);
 		return listagem;
-	}
-	
-	
-	private Aluno retornaAluno(String matricula) {
-		Aluno a1 = null;
-		for(Aluno a2: alunos) {
-			if(a2.getMatricula().equals(matricula)){
-				a1 = a2;
-			}	
-		}	
-		return a1;	
-	}
-	
-	private Tutor retornaTutor(String matricula) {
-		Tutor t1 = null;
-		for(Tutor t2: tutores) {
-			if(t2.getMatricula().equals(matricula)){
-				t1 = t2;
-			}	
-		}	
-		return t1;	
-	}
-	
-	
-	
-	private void verificaCadastro(String matricula, String nome, String email) {
-		Pattern p = Pattern.compile("\\w+@\\w+");
-		Matcher m = p.matcher(email);
-		if(!m.find()) {
-			throw new IllegalArgumentException("Erro no cadastro de aluno: Email invalido");
-		}
-		for(Aluno a: alunos) {
-			if(a.getMatricula().equals(matricula)){
-				throw new IllegalArgumentException("Erro no cadastro de aluno: Aluno de mesma matricula ja cadastrado");
-			}
-		} 
-		if(nome.trim().isEmpty()) {
-			throw new IllegalArgumentException("Erro no cadastro de aluno: Nome nao pode ser vazio ou nulo");
-		}
-		
-	}
-	
-	private void verificaRecuperaAluno(String matricula) {
-		if(retornaAluno(matricula)== null) {
-			throw new IllegalArgumentException("Erro na busca por aluno: Aluno nao encontrado");
-		}
-	}
-	
-	private void verificaGetInfoAluno(String matricula) {
-		if(retornaAluno(matricula)== null) {
-			throw new IllegalArgumentException("Erro na obtencao de informacao de aluno: Aluno nao encontrado");
-		}
-	}
-	
-	private void verificaTornaTutor(String matricula, String disciplina, int proficiencia) {
-		if(retornaAluno(matricula)== null) {
-			throw new IllegalArgumentException("Erro na definicao de papel: Tutor nao encontrado");
-		}
-		else if(proficiencia < 1 || proficiencia > 5) {
-			throw new IllegalArgumentException("Erro na definicao de papel: Proficiencia invalida");
-		}
-		else if(retornaTutor(matricula)!= null && retornaTutor(matricula).verificaDisciplina(disciplina)) {
-            throw new IllegalArgumentException("Erro na definicao de papel: Ja eh tutor dessa disciplina");
-        }
-	}
-	
-	private void verificaRecuperaTutor(String matricula) {
-		if(retornaTutor(matricula) == null) {
-			throw new IllegalArgumentException("Erro na busca por tutor: Tutor nao encontrado");
-		}
-		
 	}
 	
 	//us3
@@ -220,6 +153,55 @@ public class ControleQMA {
 		return false;
 	}
 	
+	//us4
+	public int pedirAjudaPresencial (String matAluno, String disciplina, String horario, String dia, String localInteresse) {
+		verificaPedirAjudaPresencial(matAluno, disciplina, horario, dia, localInteresse);
+		AjudaPresencial ajuda = new AjudaPresencial(matAluno, disciplina, horario, dia, localInteresse);
+		for(Tutor t: tutores) {
+			if(t.consultaHorario(horario, dia) && t.consultaLocalDeAtendimento(localInteresse) && t.verificaDisciplina(disciplina)) {
+				ajuda.setMatTutor(t.getMatricula());
+			}
+		}
+		ajudas.put(ajudas.size()+1, ajuda);
+		return ajudas.size();
+	}
+	
+	public int pedirAjudaOnline (String matAluno, String disciplina){
+		verificaPedirAjudaOnline(matAluno, disciplina);
+		Ajuda ajuda = new Ajuda(matAluno, disciplina);
+		for(Tutor t: tutores) {
+			if(t.verificaDisciplina(disciplina)) {
+				ajuda.setMatTutor(t.getMatricula());
+			}
+		}
+		ajudas.put(ajudas.size()+1, ajuda);
+		return ajudas.size();
+	}
+	
+	public String pegarTutor(int idAjuda) {
+		verificaPegarTutor(idAjuda);
+		String mat = ajudas.get(idAjuda).toString();
+		return mat;
+	}
+	
+	public String getInfoAjuda(int idAjuda, String atributo){
+		verificaGetInfoAjuda(idAjuda, atributo);
+		String srt = "";
+		Ajuda a = ajudas.get(idAjuda);
+		if(atributo.equals("disciplina")) {
+			srt = a.getDisciplina();
+		}
+		else if(atributo.equals("horario")) {
+			srt = ((AjudaPresencial) a).getHorario();
+		}
+		else if(atributo.equals("dia")) {
+			srt = ((AjudaPresencial) a).getDia();
+		}
+		else if(atributo.equals("localInteresse")) {
+			srt = ((AjudaPresencial) a).getLocalInteresse();
+		}
+		return srt;
+	}
 	//us6
 
 	public void doar(String matriculaTutor, int totalCentavos) {
@@ -273,5 +255,124 @@ public class ControleQMA {
 	}
 	
 	
+	//metodos internos
+	private Tutor retornaTutor(String matricula) {
+		Tutor t1 = null;
+		for(Tutor t2: tutores) {
+			if(t2.getMatricula().equals(matricula)){
+				t1 = t2;
+			}	
+		}	
+		return t1;	
+	}
 	
+	private Aluno retornaAluno(String matricula) {
+		Aluno a1 = null;
+		for(Aluno a2: alunos) {
+			if(a2.getMatricula().equals(matricula)){
+				a1 = a2;
+			}	
+		}	
+		return a1;	
+	}
+	
+	//Verificar excessoes
+	private void verificaCadastro(String matricula, String nome, String email) {
+		Pattern p = Pattern.compile("\\w+@\\w+");
+		Matcher m = p.matcher(email);
+		if(!m.find()) {
+			throw new IllegalArgumentException("Erro no cadastro de aluno: Email invalido");
+		}
+		for(Aluno a: alunos) {
+			if(a.getMatricula().equals(matricula)){
+				throw new IllegalArgumentException("Erro no cadastro de aluno: Aluno de mesma matricula ja cadastrado");
+			}
+		} 
+		if(nome.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro no cadastro de aluno: Nome nao pode ser vazio ou nulo");
+		}
+		
+	}
+
+	private void verificaRecuperaAluno(String matricula) {
+		if(retornaAluno(matricula)== null) {
+			throw new IllegalArgumentException("Erro na busca por aluno: Aluno nao encontrado");
+		}
+	}
+	
+	private void verificaGetInfoAluno(String matricula) {
+		if(retornaAluno(matricula)== null) {
+			throw new IllegalArgumentException("Erro na obtencao de informacao de aluno: Aluno nao encontrado");
+		}
+	}
+	
+	private void verificaTornaTutor(String matricula, String disciplina, int proficiencia) {
+		if(retornaAluno(matricula)== null) {
+			throw new IllegalArgumentException("Erro na definicao de papel: Tutor nao encontrado");
+		}
+		else if(proficiencia < 1 || proficiencia > 5) {
+			throw new IllegalArgumentException("Erro na definicao de papel: Proficiencia invalida");
+		}
+		else if(retornaTutor(matricula)!= null && retornaTutor(matricula).verificaDisciplina(disciplina)) {
+            throw new IllegalArgumentException("Erro na definicao de papel: Ja eh tutor dessa disciplina");
+        }
+	}
+	
+	private void verificaRecuperaTutor(String matricula) {
+		if(retornaTutor(matricula) == null) {
+			throw new IllegalArgumentException("Erro na busca por tutor: Tutor nao encontrado");
+		}
+		
+	}
+	
+	private void verificaPedirAjudaPresencial(String matAluno, String disciplina, String horario, String dia, String localInteresse) {
+		if(matAluno.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro no pedido de ajuda presencial: matricula de aluno nao pode ser vazio ou em branco");
+		}
+		else if(disciplina.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro no pedido de ajuda presencial: disciplina nao pode ser vazio ou em branco");
+		}
+		else if(horario.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro no pedido de ajuda presencial: horario nao pode ser vazio ou em branco");
+		}
+		else if(dia.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro no pedido de ajuda presencial: dia nao pode ser vazio ou em branco");
+		}
+		else if(localInteresse.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro no pedido de ajuda presencial: local de interesse nao pode ser vazio ou em branco");
+		}
+	}
+
+	private void verificaPedirAjudaOnline(String matAluno, String disciplina) {
+		if(matAluno.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro no pedido de ajuda online: matricula de aluno nao pode ser vazio ou em branco");
+		}
+		if(disciplina.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro no pedido de ajuda online: disciplina nao pode ser vazio ou em branco");
+		}
+	}
+
+	private void verificaGetInfoAjuda(int idAjuda, String atributo) {
+		if(idAjuda <= 0 ) {
+			throw new IllegalArgumentException("Erro ao tentar recuperar info da ajuda : id nao pode menor que zero ");
+		}
+		else if(ajudas.get(idAjuda) == null) {
+			throw new IllegalArgumentException("Erro ao tentar recuperar info da ajuda : id nao encontrado ");
+		}
+		else if(atributo.trim().isEmpty()) {
+			throw new IllegalArgumentException("Erro ao tentar recuperar info da ajuda : atributo nao pode ser vazio ou em branco");
+		}
+		else if(!atributo.equals("disciplina") && !atributo.equals("dia") && !atributo.equals("horario") && !atributo.equals("localInteresse")) {
+			throw new IllegalArgumentException("Erro ao tentar recuperar info da ajuda : atributo nao encontrado");
+		}
+	}
+	
+	private void verificaPegarTutor(int idAjuda) {
+		if(idAjuda <= 0 ) {
+			throw new IllegalArgumentException("Erro ao tentar recuperar tutor : id nao pode menor que zero ");
+		}
+		else if(ajudas.get(idAjuda) == null) {
+			throw new IllegalArgumentException("Erro ao tentar recuperar tutor : id nao encontrado ");
+		}
+	}
 }
