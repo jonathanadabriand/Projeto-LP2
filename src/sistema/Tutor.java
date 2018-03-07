@@ -6,7 +6,8 @@ import java.util.ArrayList;
 
 public class Tutor extends Aluno{
 	private ArrayList<Disciplina> disciplinas;
-	private int notaTutor, dinheiro;
+	private int dinheiro;
+	private double notaTutor;
 	private ArrayList<Horario> horarios;
 	private ArrayList<LocalDeAtendimento> locais;
 	
@@ -19,23 +20,17 @@ public class Tutor extends Aluno{
 		this.horarios = new ArrayList<>();
 		this.locais = new ArrayList<>();
 	}
+	
+	// getters e setters
+	public double getNotaTutor() {return notaTutor;}
 
-	public int getNotaTutor() {
-		return notaTutor;
-	}
+	public void setNotaTutor(double nota) {this.notaTutor = nota;}
 
-	public void setNotaTutor(int nota) {
-		this.notaTutor = nota;
-	}
+	public int getDinheiro() {return dinheiro;}
 
-	public int getDinheiro() {
-		return dinheiro;
-	}
+	public void setDinheiro(double dinheiro) {this.dinheiro += dinheiro;}
 
-	public void setDinheiro(int dinheiro) {
-		this.dinheiro += dinheiro;
-	}
-
+	// others methods 
 	public boolean verificaDisciplina(String disciplina) {
 		for(Disciplina d: disciplinas) {
 			if(d.getNomeDisciplina().equals(disciplina)) {
@@ -76,6 +71,24 @@ public class Tutor extends Aluno{
 		return false;
 	}	
 	
+	public String classificacaoDasNotas() {
+		String classif = "";
+		if (getNotaTutor() > 4.5) {
+			classif = "TOP";
+		}
+		else if (getNotaTutor() <= 4.5 && getNotaTutor() > 3) {
+			classif = "Tutor";
+		}
+		else if (getNotaTutor() <= 3) {
+			classif = "Aprendiz";
+		}
+		return classif;
+	}
+
+	public void avaliacaoTutor(int nota) {
+		double pontuacao_final = ((getNotaTutor()*5) + nota)/6;
+		setNotaTutor(pontuacao_final);
+	}
 	
 	
 

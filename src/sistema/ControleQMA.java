@@ -202,6 +202,26 @@ public class ControleQMA {
 		}
 		return srt;
 	}
+	//us5
+	
+	public String avaliarTutor (int idAjuda, int nota) {
+		verificaAvaliarTutor(idAjuda, nota);
+		String matTutor = ajudas.get(idAjuda).avaliarAgenda();
+		retornaTutor(matTutor).avaliacaoTutor(nota);
+		return matTutor;
+	}
+	
+
+	public String pegarNota(String matriculaTutor) {
+		double valorEmDouble = retornaTutor(matriculaTutor).getNotaTutor();
+		String nota = String.format("%.2f", valorEmDouble);
+		return nota;
+	}
+	
+	public String pegarNivel(String matriculaTutor) {
+		return retornaTutor(matriculaTutor).classificacaoDasNotas();
+	}
+	
 	//us6
 
 	public void doar(String matriculaTutor, int totalCentavos) {
@@ -373,6 +393,18 @@ public class ControleQMA {
 		}
 		else if(ajudas.get(idAjuda) == null) {
 			throw new IllegalArgumentException("Erro ao tentar recuperar tutor : id nao encontrado ");
+		}
+	}
+	
+	private void verificaAvaliarTutor(int idAjuda, int nota) {
+		if (nota < 0) {
+			throw new IllegalArgumentException("Erro na avaliacao de tutor: nota nao pode ser menor que 0");
+		}
+		else if (nota > 5) {
+			throw new IllegalArgumentException("Erro na avaliacao de tutor: nota nao pode ser maior que 5");
+		}
+		else if(ajudas.get(idAjuda) == null) {
+			throw new IllegalArgumentException("Erro na avaliacao de tutor: id nao encontrado ");
 		}
 	}
 }

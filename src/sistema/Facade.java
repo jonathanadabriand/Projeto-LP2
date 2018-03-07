@@ -67,6 +67,15 @@ public class Facade {
 		return c.pegarTutor(idAjuda);
 	}
 	
+	public String avaliarTutor (int idAjuda, int nota) {
+		return c.avaliarTutor(idAjuda, nota);
+	}
+	public String pegarNota(String matriculaTutor) {
+		return c.pegarNota(matriculaTutor);
+	}
+	public String pegarNivel(String matriculaTutor) {
+		return c.pegarNivel(matriculaTutor);
+	}
 	
 	//us6
 	
