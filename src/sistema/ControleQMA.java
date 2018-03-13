@@ -232,25 +232,27 @@ public class ControleQMA {
 	//us6
 
 	public void doar(String matriculaTutor, int totalCentavos) {
+		if(retornaTutor(matriculaTutor)== null) {
+			throw new IllegalArgumentException("Erro na doacao para tutor: Tutor nao encontrado");
+		}
 		Tutor t = retornaTutor(matriculaTutor);
 		if (totalCentavos < 0) {
 			throw new IllegalArgumentException("Erro na doacao para tutor: totalCentavos nao pode ser menor que zero");
 		}
-		else if (t.equals(null)) {
-			throw new NullPointerException("Erro na doacao para tutor: Tutor nao encontrado");
-		}
-		int totalTutor, totalSistema;
-		double taxaTutor;
+		int totalTutor, totalSistema = 0;
+		float taxaTutor;
 		if(t.getNotaTutor() > 4.5) {
-			taxaTutor = ((t.getNotaTutor() - 4.5) * 0.1) + 0.9;
-			totalSistema = (int) ((1 - taxaTutor) * totalCentavos);
+			int x = (int) ((t.getNotaTutor()- 4.5) *10);
+			taxaTutor = (90+x)/100;
+			totalSistema = (int) ((1 - (90+taxaTutor)/100) * totalCentavos);
 			
 		}
-		else if(t.getNotaTutor() <= 4.5 || t.getNotaTutor() > 3) {
+		else if(t.getNotaTutor() <= 4.5 && t.getNotaTutor() > 3) {
 			totalSistema = (int) (0.2 * totalCentavos);
 		}
-		else {
-			taxaTutor = ((0.4 - t.getNotaTutor()) * 0.1) + 0.9;
+		else  {
+			int x = (int) Math.round(((double)(3.0 - t.getNotaTutor()) *10)+0.5d);
+			taxaTutor =  (float)((40-x)/100.0);
 			totalSistema = (int) ((1 - taxaTutor) * totalCentavos);
 		}
 		totalTutor = totalCentavos - totalSistema;
