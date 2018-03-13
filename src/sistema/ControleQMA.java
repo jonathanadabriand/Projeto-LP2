@@ -1,5 +1,6 @@
 package sistema;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -10,12 +11,14 @@ public class ControleQMA {
 	private ArrayList<Tutor> tutores;
 	private HashMap<Integer,Ajuda> ajudas;
 	private int caixaSistema;
+	private String tipoDeOrdenacao;
 
 	public ControleQMA() {
 		this.alunos = new ArrayList<>();
 		this.tutores = new ArrayList<>();
 		this.caixaSistema = 0;
 		ajudas = new HashMap<>();
+		this.tipoDeOrdenacao = "NOME";
 	}
 	
 	//us1
@@ -35,7 +38,7 @@ public class ControleQMA {
 		String listagem = "";
 		Collections.sort(alunos);
 		for(Aluno a: alunos) {
-			listagem += a.toString() + ", ";
+			listagem += a.toString() + "\n";
 		}
 		 listagem = listagem.substring(0, listagem.length() - 2);
 		return listagem;
@@ -78,12 +81,16 @@ public class ControleQMA {
 	}
 
 	public String listarTutores() {
-		String listagem = "";
-		for(Tutor t: tutores) {
-			listagem += t.toString() + ", ";
+		if(this.tipoDeOrdenacao.equals("NOME")) {
+			return this.listarPorNome();
 		}
-		listagem = listagem.substring(0, listagem.length() - 2);
-		return listagem;
+		else if(this.tipoDeOrdenacao.equals("MATRICULA")) {
+			return this.listarPorMatricula();
+		}
+		else if(this.tipoDeOrdenacao.equals("EMAIL")) {
+			return this.listarPorEmail();
+		}
+		return "";
 	}
 	
 	//us3
@@ -274,12 +281,73 @@ public class ControleQMA {
 		return this.caixaSistema;
 	}
 	
+	//us7
+    public void configurarOrdem(String tipo) {
+    	this.tipoDeOrdenacao = tipo;
+    }
+    
+    public String listarPorNome() {
+    	String listagem = "";
+		Collections.sort(this.tutores);
+		for(Tutor t: this.tutores) {
+			listagem += t.toString() + "\n";
+		}
+		 listagem = listagem.substring(0, listagem.length() - 2);
+		return listagem;
+    }
+    
+    public String listarPorMatricula() {
+    	String[] matriculas = new String[this.tutores.size()];
+    	String listagem = "";
+    	
+		for(int i=0; i<this.tutores.size(); i++) {
+			matriculas[i] = this.tutores.get(i).getMatricula();
+		}
+		
+		Arrays.sort(matriculas);
+		
+		for(int i=0; i<matriculas.length; i++) {
+			listagem += this.retornaTutor(matriculas[i]) + "\n";
+		}
+		
+		listagem = listagem.substring(0, listagem.length() - 2);
+		return listagem;
+    }
+    
+    public String listarPorEmail() {
+    	String[] emails = new String[this.tutores.size()];
+    	String listagem = "";
+    	
+		for(int i=0; i<this.tutores.size(); i++) {
+			emails[i] = this.tutores.get(i).getEmail();
+		}
+		
+		Arrays.sort(emails);
+		
+		for(int i=0; i<emails.length; i++) {
+			listagem += this.retornaTutorEmail(emails[i]) + "\n";
+		}
+		
+		listagem = listagem.substring(0, listagem.length() - 2);
+		return listagem;
+    }
+	
 	
 	//metodos internos
-	private Tutor retornaTutor(String matricula) {
+    private Tutor retornaTutor(String matricula) {
 		Tutor t1 = null;
 		for(Tutor t2: tutores) {
 			if(t2.getMatricula().equals(matricula)){
+				t1 = t2;
+			}	
+		}	
+		return t1;	
+	}
+    
+    private Tutor retornaTutorEmail(String email) {
+		Tutor t1 = null;
+		for(Tutor t2: tutores) {
+			if(t2.getEmail().equals(email)){
 				t1 = t2;
 			}	
 		}	

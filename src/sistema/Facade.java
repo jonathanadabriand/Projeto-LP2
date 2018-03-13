@@ -88,6 +88,12 @@ public class Facade {
     public int totalDinheiroSistema() {
     	return c.totalDinheiroSistema();
     }
+    
+    //us7
+    public void configurarOrdem(String atributo) {
+    	c.configurarOrdem(atributo);
+    }
+    
 
 	
 }
