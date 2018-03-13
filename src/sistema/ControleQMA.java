@@ -18,7 +18,7 @@ public class ControleQMA {
 		this.tutores = new ArrayList<>();
 		this.caixaSistema = 0;
 		ajudas = new HashMap<>();
-		this.tipoDeOrdenacao = "NOME";
+		this.tipoDeOrdenacao = "";
 	}
 	
 	//us1
@@ -38,7 +38,7 @@ public class ControleQMA {
 		String listagem = "";
 		Collections.sort(alunos);
 		for(Aluno a: alunos) {
-			listagem += a.toString() + "\n";
+			listagem += a.toString() + ", ";
 		}
 		 listagem = listagem.substring(0, listagem.length() - 2);
 		return listagem;
@@ -90,7 +90,15 @@ public class ControleQMA {
 		else if(this.tipoDeOrdenacao.equals("EMAIL")) {
 			return this.listarPorEmail();
 		}
-		return "";
+		else {
+			String listagem = "";
+			Collections.sort(this.tutores);
+			for(Tutor t: this.tutores) {
+				listagem += t.toString() + ", ";
+			}
+			 listagem = listagem.substring(0, listagem.length() - 2);
+			return listagem;
+		}
 	}
 	
 	//us3
@@ -292,7 +300,7 @@ public class ControleQMA {
     	String listagem = "";
 		Collections.sort(this.tutores);
 		for(Tutor t: this.tutores) {
-			listagem += t.toString() + "\n";
+			listagem += t.toString() + ", ";
 		}
 		 listagem = listagem.substring(0, listagem.length() - 2);
 		return listagem;
@@ -309,7 +317,7 @@ public class ControleQMA {
 		Arrays.sort(matriculas);
 		
 		for(int i=0; i<matriculas.length; i++) {
-			listagem += this.retornaTutor(matriculas[i]) + "\n";
+			listagem += this.retornaTutor(matriculas[i]) + ", ";
 		}
 		
 		listagem = listagem.substring(0, listagem.length() - 2);
@@ -327,7 +335,7 @@ public class ControleQMA {
 		Arrays.sort(emails);
 		
 		for(int i=0; i<emails.length; i++) {
-			listagem += this.retornaTutorEmail(emails[i]) + "\n";
+			listagem += this.retornaTutorEmail(emails[i]) + ", ";
 		}
 		
 		listagem = listagem.substring(0, listagem.length() - 2);
