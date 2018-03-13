@@ -1,4 +1,5 @@
 package sistema;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -6,7 +7,10 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ControleQMA {
+public class ControleQMA implements Serializable{
+	
+	private static final long serialVersionUID = 10;
+	
 	private ArrayList<Aluno> alunos;
 	private ArrayList<Tutor> tutores;
 	private HashMap<Integer,Ajuda> ajudas;

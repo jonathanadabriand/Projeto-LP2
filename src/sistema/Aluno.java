@@ -1,8 +1,11 @@
 package sistema;
 
+import java.io.Serializable;
 
+public class Aluno implements Comparable<Aluno>, Serializable{
 
-public class Aluno implements Comparable<Aluno>{
+	private static final long serialVersionUID = 20;
+	
 	private int  nota, codigoCurso;
 	private String matricula, nome, email, telefone;
 	

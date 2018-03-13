@@ -1,6 +1,11 @@
 package sistema;
 
-public class Ajuda {
+import java.io.Serializable;
+
+public class Ajuda implements Serializable{
+
+	private static final long serialVersionUID = 30;
+	
 	private String matAluno, disciplina, matTutor;
 	private boolean ajudaAvaliada;
 	

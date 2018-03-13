@@ -1,7 +1,18 @@
 package sistema;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+
 import easyaccept.EasyAccept;
 
-public class Facade {
+public class Facade implements Serializable{
+	
+	private static final long serialVersionUID = 1L;
+
 	public static void main(String[] args) {
 		args = new String[] { "sistema.Facade", "Testes_aceitacao/us1_test.txt", "Testes_aceitacao/us2_test.txt", "Testes_aceitacao/us3_test.txt", 
 				"Testes_aceitacao/us4_test.txt", "Testes_aceitacao/us5_test.txt", "Testes_aceitacao/us6_test.txt"};
@@ -94,7 +105,40 @@ public class Facade {
     	c.configurarOrdem(atributo);
     }
     
-
+    //us8
+    public void salvar(){
+    	try {
+    		this.limpar();
+    		ObjectOutputStream save = new ObjectOutputStream(new FileOutputStream("dados.bin"));
+    		save.writeObject(c);
+    		save.close();
+		} catch (Exception e) {
+			e.getStackTrace();
+		}
+    }
+    
+    public void carregar() {
+    	try {
+			
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream("dados.bin"));
+			ControleQMA c = (ControleQMA) in.readObject();
+			this.c = c;
+			in.close();
+			
+		} catch (Exception e) {
+			e.getStackTrace();
+		}
+    }
+    
+    public void limpar() {
+    	try {
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("dados.bin"));
+			out.reset();
+			out.close();
+		} catch (Exception e) {
+			e.getStackTrace();
+		}
+    }
 	
 }
 

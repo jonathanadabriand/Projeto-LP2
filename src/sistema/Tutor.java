@@ -1,10 +1,13 @@
 package sistema;
 
-
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
-public class Tutor extends Aluno{
+public class Tutor extends Aluno implements Serializable{
+	
+	private static final long serialVersionUID = 40;
+	
 	private ArrayList<Disciplina> disciplinas;
 	private int dinheiro;
 	private double notaTutor;
